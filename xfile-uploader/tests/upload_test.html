@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"></meta>
+	<title>for testing on xfileuploader</title>
+
+	<link rel="stylesheet" href="../css/uploader.css" />
+	<script type="text/javascript" charset="utf-8" src="../js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="../js/uploader.js"></script>
+</head>
+
+<body>
+	<div class="xfile-uploader" data-elem-name="elemName" data-max-num="4" data-file-category="fileCategory"></div>
+
+	<script type="text/javascript">
+		(function(){
+			$('.xfile-uploader').each(function(idx, elem){
+				var obj = this;
+
+				// how much data files can be uploaded once, it must be larger than 0.
+				var max_num = obj.dataset.maxNum;
+				// the input name can be fetched at the server end, for example, <input name="latest_pics[]" type="hidden" />
+				// the element name will be "latest_pics, and you can get the url in $_POST["lastest_pics"], which is a array.
+            	var elem_name = obj.dataset.elemName;
+				// file category is used for identifying the file, and directing the server to store it under which directory,
+				// for example, fileCategory equals "carousel", then it will uploaded to the relative path "carousel/".
+            	var file_category = obj.dataset.fileCategory;
+
+				// this data must be an array like [{"url":"http://www.pic.com/1.jpg", "type":"image/jpg"}]
+				// as to initialize the file-loader for showing the images already created.
+				var files_info = [
+					{'url':'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1520760790601&di=77f97720082c9d7bdde2f858e2e3e797&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fimage%2Fc0%253Dpixel_huitu%252C0%252C0%252C294%252C40%2Fsign%3Decfe83b9042442a7ba03f5e5b83bc827%2F728da9773912b31bc2fe74138d18367adab4e17e.jpg', 'type':'image/jpg'},
+					{'url': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1520761157268&di=f682dc690f870ab74a7a5aad7325cc3a&imgtype=0&src=http%3A%2F%2Fimg5.xiazaizhijia.com%2Fwalls%2F20160708%2F1440x900_2f172c09d079701.jpg', 'type':'image/jpg'},
+					{'url': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1520761205561&di=941e2403de77784ab07c9bc5f5427295&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2017-12-19%2F5a387ccbaddb7.jpg', 'type':'image/jpg'},
+					{'url': 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1520761292102&di=33188d19408d692d80ff106c54ec6203&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F2017-12-19%2F5a387cb8439ea.jpg', 'type':'image/jpg'}
+				]; 
+
+				// if the server defines the upload root path is /data/uploads, then the files will uploaded
+				// to the path /data/uploads/<underModule>/<fileCategory>
+				var xfile_uploader = $(obj).xfileUploader({
+                	//uploadUrl: "<?= Url::toRoute('xfileuploader/upload') ?>", // the yii2 service
+                	uploadUrl: "/xfileuploader.php",  // the raw mode of php
+                	maxFileNum: max_num,
+                	underModule: "user",
+                	fileCategory: file_category,
+                	elemName: elem_name,
+                	initData: files_info
+            	});
+			});
+		})();
+	</script>
+</body>
+</html>
